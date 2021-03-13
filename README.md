@@ -1,1 +1,1 @@
-# Registrocassandra
+# Registro Cassandra
