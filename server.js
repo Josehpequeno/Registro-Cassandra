@@ -33,9 +33,23 @@ function Registros(q) {
         query = `SELECT * FROM registro.casamento;`;
         q1 = execute(query, []).then(result => {
             console.log();
+            console.log("Query: {");
+            for (let i = 0; i < q.length; i++) {
+                console.log("  ", q[i]);
+            }
+            console.log("}");
+
             console.log("########################################");
-            console.log("Query: ", q)
-            for (const row of result.rows) {
+            for (let row of result.rows) {
+                if (row.name1 == null) {
+                    row.name1 = "";
+                }
+                if (row.name2 == null) {
+                    row.name2 = "";
+                }
+                if (row.data == null) {
+                    row.data = "";
+                }
                 console.log(
                     "Linha: %s | %s | %s | %s ",
                     row.id,
@@ -90,7 +104,7 @@ promisesAll.then((result) => {
     data = String((data.getFullYear() + "-" + meses[(data.getMonth())] + "-" + dia));
     //console.log(data);
     data = data;
-    query1 = `INSERT INTO registro.casamento (id,name1, name2, data) VALUES ('a1','Joseh','Marcus', '${data}');`
+    query1 = `INSERT INTO registro.casamento (id,name1, name2, data) VALUES ('a1','Joseh','Marcus','${data}');`
     q1 = execute(query1, []);
     data = new Date("Jan 24, 2017");
     dia = data.getDate();
@@ -101,35 +115,38 @@ promisesAll.then((result) => {
     //console.log(data);
     query2 = `INSERT INTO registro.casamento (id, name1, name2, data) VALUES ('b2','Jhon','Camila','${data}');`
     q2 = execute(query2, []);
-    query3 = `INSERT INTO registro.casamento (id, name1, name2) VALUES ('c3','Hiago','Taina');`
+    query3 = `INSERT INTO registro.casamento (id, name1, name2) VALUES ('c3','Hiago','Taina');`;
     q3 = execute(query3, []);
-    data = new Date("Sept 18, 2022");
-    dia = data.getDate();
-    if (dia < 10) {
-        dia = String("0" + dia);
-    }
-    data = String((data.getFullYear() + "-" + meses[(data.getMonth())] + "-" + dia));
-    
-    query4 = `INSERT INTO registro.casamento (id, name1, name2,data) VALUES ('c3','Hiago','Taina','${data}');`
+    query4 = `INSERT INTO registro.casamento (id, name1) VALUES ('d4','Rodman');`;
     q4 = execute(query4, []);
-    query5 = `UPDATE registro.casamento SET data = '${'2022-03-25'}' WHERE id = 'c3';`
-    q5 = execute(query5, []);
     promises.push(q1);
-    promises.push(Registros(query1));
     promises.push(q2);
-    promises.push(Registros(query2));
     promises.push(q3);
-    promises.push(Registros(query3));
     promises.push(q4);
-    promises.push(Registros(query4));
-    promises.push(q5);
-    promises.push(Registros(query5));
     const promisesAll2 = Promise.all(promises);
-    promisesAll2.then(result => {
-        console.log("Querys secundárias feitas");
-    }).catch(err => {
-        console.log(err);
-    })
+    promisesAll2.then((result) => {
+        Registros([query1, query2, query3, query4]).then(result => {
+            data = new Date("Sept 18, 2022");
+            dia = data.getDate();
+            if (dia < 10) {
+                dia = String("0" + dia);
+            }
+            data = String((data.getFullYear() + "-" + meses[(data.getMonth())] + "-" + dia));
+
+            query4 = `INSERT INTO registro.casamento (id, data) VALUES ('c3','${data}');`
+            q4 = execute(query4, []).then(result => {
+                Registros([query4]).then(result => {
+                    query5 = `UPDATE registro.casamento SET data = '${'2022-03-25'}' WHERE id = 'c3';`
+                    q5 = execute(query5, []).then(result => {
+                        Registros([query5]).then(result => {
+                            console.log("");
+                            console.log("Querys secundárias feitas");
+                        })
+                    }).catch(err => { console.log(err) });
+                });
+            }).catch(err => { console.log(err) });
+        }).catch(err => { console.log(err) });
+    }).catch(err => { console.log });
 }).catch(err => {
     console.log(err)
 });
