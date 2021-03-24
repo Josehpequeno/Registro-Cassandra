@@ -33,13 +33,15 @@ function Registros(q) {
         query = `SELECT * FROM registro.casamento;`;
         q1 = execute(query, []).then(result => {
             console.log();
-            console.log("Query: {");
+            //console.log("Query: {");
             for (let i = 0; i < q.length; i++) {
-                console.log("  ", q[i]);
+                console.log(q[i]);
+                console.log("");
             }
-            console.log("}");
+            console.log(query);
+            //console.log("}");
 
-            console.log("########################################");
+            console.log("");
             for (let row of result.rows) {
                 if (row.name1 == null) {
                     row.name1 = "";
@@ -58,7 +60,7 @@ function Registros(q) {
                     row.data
                 );
             }
-            console.log("########################################");
+            console.log("");
             resolve()
             //client.shutdown();
         }).catch(err => {
@@ -94,7 +96,7 @@ promisesAll.then((result) => {
     Registros([query1, query2, query3, query4, query5]).then(result => {
 
 
-        console.log("Feito querys iniciais");
+        console.log("Feito querys iniciais\n");
         let promises = [];
 
         let data = new Date("Jan 29, 2023");
