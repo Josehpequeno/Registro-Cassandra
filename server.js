@@ -99,7 +99,7 @@ promisesAll.then((result) => {
         console.log("Feito querys iniciais\n");
         let promises = [];
 
-        let data = new Date("Jan 29, 2023");
+        let data = new Date("Dez 16, 2021");
         const meses = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
         let dia = data.getDate();
         if (dia < 10) {
